@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mood‑To‑Memories</title>
+  <!--
+    This is the main entry point for the Mood‑To‑Memories app. It recreates the
+    functionality of the original mood‑tracking site with a fresh UI built from
+    scratch.  The page is broken into sections for the hero banner, the
+    journaling interface, a timeline of past entries, and an about section.
+    A floating chat widget sits in the corner of the page and can be used to
+    ask questions about journaling and mental wellbeing.  The design uses
+    modern CSS techniques like flexbox and CSS variables to support dark and
+    light themes.
+  -->
+  <link rel="stylesheet" href="style.css">
+  <!-- Google font for a playful, modern aesthetic -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-Xx4CQDfHEZptq9d+NklzSc2Vxe3F74g5UXeBQQsEM69d8GhX+EZ0JJ69g5oC4oKu3Ijdwx9X7OfpSPDgnsN0Gw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <!-- Chart.js for mood distribution chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <!-- Clickable logo acts as a Home link now -->
+    <a href="#hero" class="logo">Mood<span>To</span>Memories</a>
+    <nav>
+      <ul>
+        <!-- Removed explicit Home link; the logo now scrolls to the top -->
+        <li><a href="#journal">Journal</a></li>
+        <li><a href="#timeline">Memories</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+    </nav>
+    <!-- Toggle for dark/light mode -->
+    <div class="topbar-actions">
+      <!-- Theme picker for color schemes -->
+      <div id="themePicker" class="theme-picker" title="Choose theme">
+        <!-- Each swatch uses a dedicated class rather than inline style. This
+             prevents colours from changing unexpectedly and gives the
+             appearance of a static gradient circle. The classes are
+             defined in CSS with fixed gradients. -->
+        <button class="theme-btn" data-theme="default" aria-label="Default theme"><span class="swatch default"></span></button>
+        <button class="theme-btn" data-theme="neon" aria-label="Neon theme"><span class="swatch neon"></span></button>
+        <button class="theme-btn" data-theme="sunset" aria-label="Sunset theme"><span class="swatch sunset"></span></button>
+      </div>
+    <!-- Toggle for dark/light mode. Use inline onclick to ensure reliability -->
+    <button id="themeToggle" aria-label="Toggle dark mode" onclick="toggleTheme()">🌙</button>
+    </div>
+  </header>
+
+  <!-- Hero section: introduction and call to action -->
+  <section id="hero" class="hero">
+    <div class="hero-content">
+      <h1>Capture Your Mood, Create Lasting Memories</h1>
+      <p>
+        Research shows that tracking how you feel can improve self‑awareness and
+        help you look back on emotions to understand what was happening. Journaling
+        also reduces anxiety and improves emotional regulation.
+      </p>
+      <!-- Removed duplicate Start Journaling call-to-action. The Journal link in the navigation already provides this action. -->
+      <!-- <a href="#journal" class="cta-button">Start Journaling</a> -->
+    </div>
+    <!-- Daily affirmation section. This area will display a positive
+         affirmation generated based on your recent moods. Users can request
+         a new affirmation at any time. -->
+    <div id="dailyAffirmation" class="daily-affirmation">
+      <p class="affirmation-text">"Today is a great day to start reflecting."</p>
+      <button id="newAffirmationBtn" class="new-affirmation-btn">New affirmation</button>
+    </div>
+  </section>
+
+  <!-- Journaling interface -->
+  <section id="journal" class="journal-section">
+    <h2>Track Your Mood</h2>
+    <p>Select how you’re feeling and write a brief entry about your day.</p>
+    <form id="entryForm">
+      <div class="mood-options">
+        <label class="mood">
+          <input type="radio" name="mood" value="Happy" required>
+          <span class="icon"><i class="fas fa-smile-beam"></i></span>
+          <span class="label">Happy</span>
+        </label>
+        <label class="mood">
+          <input type="radio" name="mood" value="Sad">
+          <span class="icon"><i class="fas fa-frown"></i></span>
+          <span class="label">Sad</span>
+        </label>
+        <label class="mood">
+          <input type="radio" name="mood" value="Angry">
+          <span class="icon"><i class="fas fa-angry"></i></span>
+          <span class="label">Angry</span>
+        </label>
+        <label class="mood">
+          <input type="radio" name="mood" value="Excited">
+          <span class="icon"><i class="fas fa-grin-stars"></i></span>
+          <span class="label">Excited</span>
+        </label>
+        <label class="mood">
+          <input type="radio" name="mood" value="Calm">
+          <span class="icon"><i class="fas fa-spa"></i></span>
+          <span class="label">Calm</span>
+        </label>
+        <!-- Button to add a custom mood -->
+        <button type="button" id="addMoodBtn" class="mood add-mood-btn" aria-label="Add mood">
+          <span class="icon"><i class="fas fa-plus"></i></span>
+          <span class="label">Add</span>
+        </button>
+      </div>
+      <textarea id="entryText" name="entryText" rows="4" placeholder="Write about your day..." required></textarea>
+      <!-- Mood suggestion appears here based on your entry text -->
+      <div id="moodSuggestion" class="mood-suggestion" aria-live="polite"></div>
+      <button type="submit" class="submit-button">Save Entry</button>
+    </form>
+    <!-- Modal for adding a custom mood -->
+    <div id="moodModal" class="modal">
+      <div class="modal-content">
+        <h3>Create a new mood</h3>
+        <label for="newMoodName">Mood name</label>
+        <input type="text" id="newMoodName" placeholder="e.g., Grateful" required>
+        <label for="newMoodColor">Color</label>
+        <input type="color" id="newMoodColor" value="#ffb74d">
+        <div class="modal-actions">
+          <button id="saveMoodBtn" class="primary-btn">Add Mood</button>
+          <button id="cancelMoodBtn" class="secondary-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline of past entries -->
+  <section id="timeline" class="timeline-section">
+    <h2>Your Memories</h2>
+    <div class="timeline-controls">
+      <!-- Removed search bar and filter tag. The export button remains. -->
+      <button id="exportBtn" class="export-btn" type="button">Export</button>
+    </div>
+    <canvas id="moodChart" width="400" height="200"></canvas>
+    <div id="trending" class="trending" aria-label="Trending keywords"></div>
+    <!-- Word cloud of frequent words -->
+    <div id="wordCloud" class="word-cloud" aria-label="Word cloud"></div>
+    <div id="entriesContainer" class="entries-container"></div>
+  </section>
+
+  <!-- Calendar section showing moods by day -->
+  <section id="calendarSection" class="calendar-section">
+    <h2>Mood Calendar</h2>
+    <div class="calendar-controls">
+      <button id="prevMonthBtn" type="button" aria-label="Previous month"><i class="fas fa-chevron-left"></i></button>
+      <span id="calendarMonthLabel"></span>
+      <button id="nextMonthBtn" type="button" aria-label="Next month"><i class="fas fa-chevron-right"></i></button>
+    </div>
+    <div id="calendarGrid" class="calendar-grid" aria-label="Calendar grid"></div>
+  </section>
+
+  <!-- About section explaining the science and approach -->
+  <section id="about" class="about-section">
+    <h2>Why Mood Tracking?</h2>
+    <p>
+      Keeping a record of your thoughts and feelings reduces anxiety and improves
+      awareness. Our app lets you visualize moods over time,
+      turning fleeting feelings into cherished memories.  The bar chart above
+      summarizes how often you experience each mood and may reveal patterns in
+      your emotional life.
+    </p>
+  </section>
+
+  <!-- Floating chatbot -->
+  <div id="chatbot" class="chatbot">
+    <button id="chatToggle" class="chat-toggle" aria-label="Open chat">
+      <i class="fas fa-comments"></i>
+    </button>
+    <div id="chatWindow" class="chat-window">
+      <div class="chat-header">
+        <span>M2M Assistant</span>
+        <!-- Place the expand and close buttons directly inside the header. The title uses
+             flex-grow to occupy available space, pushing these controls to the right. -->
+        <button id="chatExpandBtn" class="chat-control-btn" aria-label="Expand chat">⛶</button>
+        <button id="chatCloseBtn" class="chat-control-btn" aria-label="Close chat">×</button>
+      </div>
+      <div id="chatMessages" class="chat-messages"></div>
+      <form id="chatForm" class="chat-form">
+        <textarea id="chatInput" placeholder="Ask me anything about journaling..." rows="1" required></textarea>
+        <button type="submit" class="chat-send" title="Send">
+          <i class="fas fa-paper-plane"></i>
+          <!-- Use a descriptive label on the send button so users know they can click
+               or press Enter to send their message. 'Enter' is used to reduce
+               ambiguity about the button’s purpose. -->
+          <span class="chat-send-label">Enter</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confetti container for celebratory animations -->
+  <div id="confetti-container" class="confetti-container"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
