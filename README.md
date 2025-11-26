@@ -1,4 +1,4 @@
-# m2m-anishbandapelly
+# m2m-anish-bandapelly
 # Mood-to-Memories
 
 Mood-to-Memories is a playful, AI-assisted mood journaling web app.  
