@@ -1,0 +1,1015 @@
+/*
+  Global styles for the Mood‑To‑Memories app. The design uses CSS variables
+  to enable light and dark themes and leverages flexbox and grid layouts for
+  responsive alignment.  Animations and subtle shadows give the site a
+  polished and “crazy” feel while remaining consistent with mental health
+  journal apps.
+*/
+
+/* CSS variables for themes */
+:root {
+  --background: #fdfbff;
+  --surface: #ffffff;
+  --primary: #6c63ff;
+  --primary-dark: #5548c8;
+  --secondary: #f77754;
+  --text: #333333;
+  --muted: #666666;
+  --border: rgba(0,0,0,0.1);
+  --chat-bg: #ffffff;
+  --chat-accent: #6c63ff;
+}
+
+/* Dark theme overrides */
+.dark {
+  --background: #121212;
+  --surface: #1f1f1f;
+  --primary: #8e85ff;
+  --primary-dark: #7264d8;
+  --secondary: #ff8a65;
+  --text: #f5f5f5;
+  --muted: #aaaaaa;
+  --border: rgba(255,255,255,0.1);
+  --chat-bg: #1f1f1f;
+  --chat-accent: #8e85ff;
+}
+
+/* Global resets */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', 'Segoe UI', Tahoma, sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Smooth scrolling for anchor navigation */
+html {
+  scroll-behavior: smooth;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Top navigation bar */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-decoration: none;
+  color: var(--text);
+  cursor: pointer;
+}
+.logo span {
+  color: var(--primary);
+}
+
+/* Ensure the clickable logo does not show underline on hover */
+.logo:hover {
+  text-decoration: none;
+}
+.topbar nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+.topbar nav a {
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+.topbar nav a:hover {
+  color: var(--secondary);
+}
+/* This ensures the right side of the topbar can contain multiple controls neatly */
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+#themeToggle {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: var(--primary);
+  transition: transform 0.3s ease;
+}
+#themeToggle:hover {
+  transform: rotate(30deg);
+}
+
+/* Hero section */
+.hero {
+  background: linear-gradient(135deg, var(--primary), var(--secondary), #ff9a56);
+  background-size: 400% 400%;
+  animation: gradientShift 20s ease infinite;
+  color: #ffffff;
+  padding: 6rem 2rem 3rem;
+  text-align: center;
+  position: relative;
+  clip-path: ellipse(75% 100% at 50% 0%);
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+.hero p {
+  max-width: 650px;
+  margin: 0 auto 2rem;
+  font-size: 1.2rem;
+  color: rgba(255,255,255,0.9);
+}
+.cta-button {
+  background: var(--surface);
+  color: var(--primary);
+  padding: 0.75rem 1.5rem;
+  border-radius: 30px;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.cta-button:hover {
+  background: var(--primary-dark);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Journal section */
+.journal-section {
+  padding: 3rem 2rem;
+  background-color: var(--surface);
+  position: relative;
+}
+.journal-section h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+.journal-section p {
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+}
+.journal-section form {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+.mood-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: flex-start;
+}
+.mood {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  border: none;
+  background: transparent;
+    /* Position relative to allow positioning of delete button */
+    position: relative;
+}
+.mood input {
+  display: none;
+}
+.mood .icon {
+  font-size: 1.75rem;
+  background: var(--primary);
+  color: #fff;
+  padding: 0.5rem;
+  border-radius: 50%;
+  margin-bottom: 0.25rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+}
+.mood .label {
+  font-size: 0.85rem;
+  color: var(--text);
+}
+.mood:hover {
+  transform: translateY(-4px);
+}
+/* Remove the default checked state styling. We no longer change the mood
+   icon’s background colour when selected. Selection is indicated via the
+   parent label’s border and text colour. */
+
+
+/* Add visual feedback when a mood is selected. We apply styles to the
+   parent label to avoid conflicts with inline icon colours. */
+/* When a mood is selected, enlarge and highlight it so the user can see
+   their choice immediately. Inline styles on icons may override background
+   colours, so we use box-shadows and borders instead. */
+/* Highlight a selected mood.  We apply a coloured, dashed border to the
+   parent label and adjust its scale slightly.  The mood icon retains
+   its original background colour.  Text is coloured with the primary
+   accent to match the add button border. */
+.mood.selected {
+  transform: translateY(-4px) scale(1.05);
+  border: 2px dashed var(--primary);
+  border-radius: 12px;
+  padding: 0.4rem;
+}
+.mood.selected .icon {
+  transform: scale(1.2);
+  box-shadow: none;
+}
+.mood.selected .label {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/*
+  Delete button for custom moods.
+  Displays a small × in the top right corner of the mood label so users can remove
+  custom moods. Built‑in moods do not display this button. It is absolutely
+  positioned within the mood label and uses a circular background on hover.
+*/
+.delete-mood-btn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--secondary);
+  color: #fff;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  z-index: 2;
+  transition: background 0.2s ease, opacity 0.2s ease;
+  /* Hidden by default; becomes visible when hovering over the mood label */
+  opacity: 0;
+  pointer-events: none;
+}
+.delete-mood-btn:hover {
+  background: #e5383b;
+}
+
+/* Show the delete button when the user hovers over a custom mood */
+.mood:hover .delete-mood-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+/* Offset scroll anchor targets by topbar height for smooth navigation */
+section {
+  scroll-margin-top: 80px;
+}
+
+/* Add mood button styling */
+.add-mood-btn {
+  border: 2px dashed var(--primary);
+  border-radius: 8px;
+  padding: 0.5rem;
+  background: transparent;
+  color: var(--primary);
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 72px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.add-mood-btn:hover {
+  background: var(--primary);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Modal styling */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+.modal.open {
+  display: flex;
+}
+.modal-content {
+  background: var(--surface);
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.modal-content label {
+  font-weight: 500;
+  color: var(--text);
+}
+.modal-content input[type="text"], .modal-content input[type="color"] {
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 1rem;
+  background: var(--background);
+  color: var(--text);
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.primary-btn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.secondary-btn {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.primary-btn:hover {
+  background: var(--primary-dark);
+}
+.secondary-btn:hover {
+  background: var(--background);
+}
+
+/* Daily affirmation section */
+.daily-affirmation {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.affirmation-text {
+  font-size: 1.2rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.9);
+  text-align: center;
+}
+.new-affirmation-btn {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.new-affirmation-btn:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+/* Timeline controls */
+.timeline-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.export-btn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s ease;
+}
+.export-btn:hover {
+  background: var(--primary-dark);
+}
+.search-input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  min-width: 200px;
+}
+.filter-tag {
+  /* Use a solid black pill for the active filter tag */
+  background: #000;
+  color: #fff;
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.filter-tag:after {
+  content: ' ×';
+  margin-left: 4px;
+  font-weight: bold;
+}
+
+/* Trending keywords */
+.trending {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  justify-content: center;
+}
+.trending .word {
+  background: var(--surface);
+  /* Use a solid black border and text to ensure consistency across themes */
+  border: 1px solid #000;
+  color: #000;
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+  transition: transform 0.2s ease;
+}
+.trending .word:hover {
+  transform: translateY(-2px);
+  background: var(--primary);
+  color: #fff;
+}
+
+/* Confetti container */
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 3000;
+}
+
+.journal-section textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-size: 1rem;
+  resize: vertical;
+  margin-bottom: 1rem;
+  background: var(--surface);
+  color: var(--text);
+}
+.submit-button {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.submit-button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* Timeline section */
+.timeline-section {
+  padding: 3rem 2rem;
+  background-color: var(--background);
+}
+.timeline-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.entries-container {
+  margin-top: 2rem;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+.entry-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 6px solid var(--primary);
+  border-radius: 6px;
+  padding: 1rem;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease;
+}
+.entry-card:hover {
+  transform: translateY(-4px);
+}
+.entry-card .mood-tag {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  background: var(--secondary);
+  color: #fff;
+  padding: 0.3rem 0.6rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+}
+.entry-card .date {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+.entry-card .text {
+  white-space: pre-wrap;
+  line-height: 1.4;
+}
+.entry-card .delete-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: color 0.2s ease;
+}
+.entry-card .delete-btn:hover {
+  color: var(--secondary);
+}
+
+/* About section */
+.about-section {
+  padding: 3rem 2rem;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.about-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+.about-section p {
+  max-width: 700px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* Chatbot styles */
+.chatbot {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.chat-toggle {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease;
+}
+.chat-toggle:hover {
+  transform: scale(1.1);
+}
+.chat-window {
+  width: 320px;
+  max-height: 480px;
+  background: var(--chat-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  overflow: hidden;
+  display: none;
+  flex-direction: column;
+  /* Make the chat window fixed so it can be moved around the viewport */
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+}
+.chat-window.open {
+  display: flex;
+  animation: fadeIn 0.3s ease forwards;
+}
+.chat-header {
+  background: var(--primary);
+  color: #fff;
+  /* Default padding on chat header */
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+  /* Make the header relative so the action buttons can be
+     absolutely positioned within it. */
+  position: relative;
+}
+
+/* Allow the title inside the chat header to shrink so buttons remain visible */
+.chat-header span {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Style buttons inside chat header (close and expand) so they are visible and right-aligned */
+/*
+ * The chat header no longer styles generic buttons. Instead, the
+ * .chat-control-btn class below defines the size, colours and interactions for
+ * the expand and close icons. Removing the generic chat-header button styles
+ * prevents them from overriding the more specific .chat-control-btn rules.
+ */
+
+/* Expanded chat window */
+.chat-window.expanded {
+  width: 90vw;
+  height: 70vh;
+  max-height: none;
+  /* When expanded, override positioning to center horizontally and move up
+     from the bottom so that more content fits on screen. */
+  bottom: auto;
+  right: auto;
+  left: 50%;
+  top: 10vh;
+  transform: translateX(-50%);
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  background: var(--chat-bg);
+}
+
+/* Position the expand/minimise and close buttons at the top right of the
+   chat window. This container ensures the buttons remain visible when the
+   chat window is expanded across the screen. */
+
+/* Style for buttons inside the chat controls (expand/minimise and close). */
+.chat-control-btn {
+  background: rgba(0,0,0,0.2);
+  border: none;
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.chat-control-btn:hover {
+  background: rgba(0,0,0,0.3);
+}
+.chat-messages .message {
+  margin-bottom: 0.75rem;
+  max-width: 80%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  line-height: 1.3;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.chat-messages .message.user {
+  background: var(--primary);
+  color: #fff;
+  align-self: flex-end;
+  border-bottom-right-radius: 0;
+}
+.chat-messages .message.bot {
+  background: var(--surface);
+  color: var(--text);
+  align-self: flex-start;
+  border-bottom-left-radius: 0;
+  border: 1px solid var(--border);
+}
+
+/* Ensure bold markdown rendered in chat messages appears bold. Without
+   this rule the **text** replacement may not display as strong visually. */
+.chat-messages strong {
+  font-weight: 700;
+}
+.chat-form {
+  display: flex;
+  border-top: 1px solid var(--border);
+}
+.chat-form textarea {
+  flex: 1;
+  border: none;
+  padding: 0.75rem;
+  resize: none;
+  font-size: 1rem;
+  outline: none;
+  background: var(--chat-bg);
+  color: var(--text);
+}
+.chat-send {
+  background: var(--chat-accent);
+  color: #fff;
+  border: none;
+  /* Expand width to accommodate icon and label */
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.8rem;
+  cursor: pointer;
+  gap: 0.25rem;
+}
+
+/* Label text inside the chat send button */
+.chat-send-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Generic icon style for chat header buttons using unicode symbols */
+.chat-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+  .hero p {
+    font-size: 0.95rem;
+  }
+  .journal-section, .timeline-section, .about-section {
+    padding: 2rem 1rem;
+  }
+  .chat-window {
+    width: 90vw;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Extended UI components for scalable, fun experience */
+
+/* Mood suggestion text */
+.mood-suggestion {
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Theme picker styles */
+.theme-picker {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+.theme-picker .theme-btn {
+  background: transparent;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+.theme-picker .theme-btn .swatch {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  /* Always show a solid black border around theme swatches so they
+     remain consistent across themes */
+  border: 2px solid #000;
+}
+.theme-picker .theme-btn.active .swatch {
+  box-shadow: 0 0 0 2px var(--secondary);
+}
+
+/* Fixed gradient backgrounds for theme swatches. These ensure the
+   swatch colours remain constant rather than shifting with the
+   underlying CSS variables. */
+.swatch.default {
+  background: linear-gradient(45deg, #6c63ff, #5548c8);
+}
+.swatch.neon {
+  background: linear-gradient(45deg, #00bcd4, #0097a7);
+}
+.swatch.sunset {
+  background: linear-gradient(45deg, #ff8a65, #ff7043);
+}
+
+/* Calendar section */
+.calendar-section {
+  padding: 3rem 2rem;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+.calendar-section h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+.calendar-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.calendar-controls button {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.calendar-controls span {
+  font-weight: 600;
+  color: var(--text);
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.calendar-grid .day {
+  background: var(--background);
+  border: 1px solid var(--border);
+  min-height: 80px;
+  position: relative;
+  padding: 0.25rem;
+  font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.calendar-grid .day .date-number {
+  font-weight: 600;
+  color: var(--text);
+}
+.calendar-grid .day .mood-indicator {
+  /* Removed single indicator style in favour of multiple dots per mood. This
+     selector remains for backward compatibility but is unused after
+     calendar update. */
+  display: none;
+}
+
+/* Container for multiple mood dots in the calendar. It positions itself
+   at the bottom-right corner and lays out dots horizontally with a small
+   gap. */
+.calendar-grid .day .mood-indicators {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  display: flex;
+  gap: 2px;
+}
+
+/* Individual mood dot displayed inside the calendar cell. A dot’s
+   background colour is set inline via JavaScript. */
+.calendar-grid .day .mood-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+}
+
+/* Text displayed beneath the date in calendar cells when a mixture feeling
+   has been generated. Use a small font and muted colour so it
+   doesn’t overpower the calendar. */
+.calendar-grid .day .feeling-text {
+  font-size: 0.65rem;
+  margin-top: 2px;
+  color: var(--muted);
+  line-height: 1.2;
+}
+
+/* Word cloud container */
+.word-cloud {
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+  margin-top: 2rem;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  pointer-events: none;
+}
+.word-cloud span {
+  position: absolute;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Additional colour themes */
+body.theme-neon {
+  --primary: #00bcd4;
+  --primary-dark: #0097a7;
+  --secondary: #ff4081;
+  --background: #f5f5f5;
+  --surface: #ffffff;
+  --text: #2d2d2d;
+  --muted: #6c6c6c;
+  --border: rgba(0,0,0,0.1);
+  --chat-bg: #ffffff;
+  --chat-accent: #00bcd4;
+}
+body.theme-sunset {
+  --primary: #ff9a56;
+  --primary-dark: #e67e22;
+  --secondary: #e94e77;
+  --background: #fff8f0;
+  --surface: #ffffff;
+  --text: #333333;
+  --muted: #777777;
+  --border: rgba(0,0,0,0.1);
+  --chat-bg: #ffffff;
+  --chat-accent: #ff9a56;
+}
+
+/* Dark mode overrides for colour themes */
+body.theme-neon.dark {
+  --background: #121212;
+  --surface: #1f1f1f;
+  --text: #f5f5f5;
+  --muted: #aaaaaa;
+  --border: rgba(255,255,255,0.1);
+  --chat-bg: #1f1f1f;
+  /* Keep primary and secondary colours from neon theme for vibrancy */
+}
+body.theme-sunset.dark {
+  --background: #121212;
+  --surface: #1f1f1f;
+  --text: #f5f5f5;
+  --muted: #aaaaaa;
+  --border: rgba(255,255,255,0.1);
+  --chat-bg: #1f1f1f;
+  /* Keep primary and secondary colours from sunset theme for warmth */
+}
