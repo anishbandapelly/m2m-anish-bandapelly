@@ -30,3 +30,4 @@ Everything is built with **pure HTML, CSS, and JavaScript**, with optional integ
 - 🌓 **Light/Dark Mode & Themes** – Toggle day/night and experiment with different color themes.
 - 💾 **Local Persistence** – Entries and moods are saved in the browser (via localStorage), so your data stays on your device.
 -------------------------------------------------------
+**MY LINKEDIN :**  www.linkedin.com/in/anish-bandapelly-21aa09384
