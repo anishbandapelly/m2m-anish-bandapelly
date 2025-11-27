@@ -17,7 +17,11 @@
    * AI‑powered features.  The key will be used directly in API calls and
    * will not be requested from the user at runtime.
    */
-  const GEMINI_API_KEY = 'AIzaSyAsehs1M3n6a84ecwe5k49y4If7kEk2DLs';
+  const GEMINI_API_KEY = ""; // empty in public
+  if (!GEMINI_API_KEY) {
+  // Public demo mode: no real API
+  return useLocalFallback();
+}
   // DOM elements
   const entryForm = document.getElementById('entryForm');
   const entriesContainer = document.getElementById('entriesContainer');
